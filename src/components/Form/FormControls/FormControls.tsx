@@ -25,7 +25,7 @@ const FormControls: React.FC<FormControlsProps> = ({
   onViewsChange,
   views,
 }) => {
-  const pages = views.map(view => view.label);
+  const pages = views.map((view) => view.label);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [, setDraggedItem] = useState<string | null>(null);
   const [targetIndex, setTargetIndex] = useState<number | null>(null);
@@ -138,7 +138,7 @@ const FormControls: React.FC<FormControlsProps> = ({
         const newPages = [...pages];
         const [draggedItem] = newPages.splice(draggedIndex, 1);
         newPages.splice(targetIndex, 0, draggedItem);
-        onViewsChange(newPages); // Fixed: Use onViewsChange instead of setPages
+        onViewsChange(newPages);
 
         setDraggedIndex(null);
         setDraggedItem(null);
@@ -185,7 +185,7 @@ const FormControls: React.FC<FormControlsProps> = ({
     pages,
     initialMousePos,
     contextMenu.visible,
-    onViewsChange, // Added to dependencies
+    onViewsChange,
   ]);
 
   const handleMouseDown = (index: number, event: React.MouseEvent) => {
@@ -209,11 +209,10 @@ const FormControls: React.FC<FormControlsProps> = ({
 
   const handleContextMenu = (event: React.MouseEvent, index: number) => {
     event.preventDefault();
-    const menuHeight = 280; // Approximate height of the context menu
+    const menuHeight = 280;
     const windowHeight = window.innerHeight;
     const clickY = event.clientY;
 
-    // If menu would go below screen, position it above the click point
     const shouldOpenUpward = clickY + menuHeight > windowHeight;
 
     setContextMenu({
@@ -228,10 +227,9 @@ const FormControls: React.FC<FormControlsProps> = ({
     event.preventDefault();
     event.stopPropagation();
     const rect = event.currentTarget.getBoundingClientRect();
-    const menuHeight = 280; // Approximate height of the context menu
+    const menuHeight = 280;
     const windowHeight = window.innerHeight;
 
-    // If menu would go below screen, position it above the button
     const shouldOpenUpward = rect.bottom + menuHeight > windowHeight;
 
     setContextMenu({
@@ -248,26 +246,26 @@ const FormControls: React.FC<FormControlsProps> = ({
 
   const handleMenuAction = (action: string, index: number) => {
     switch (action) {
-      case 'setFirst':
+      case "setFirst":
         const newPages = [...pages];
         const [item] = newPages.splice(index, 1);
         newPages.unshift(item);
         onViewsChange(newPages);
-        onViewIndexChange(0); // Set focus to first page
+        onViewIndexChange(0);
         break;
-      case 'rename':
+      case "rename":
         const newName = prompt("Enter new name:", pages[index]);
         if (newName && newName.trim()) {
           onRenameView(pages[index], newName.trim());
         }
         break;
-      case 'copy':
+      case "copy":
         onAddView(`${pages[index]} Copy`);
         break;
-      case 'duplicate':
+      case "duplicate":
         onAddView(pages[index]);
         break;
-      case 'delete':
+      case "delete":
         if (pages.length > 1) {
           onDeleteView(pages[index]);
           if (currentViewIndex >= index && currentViewIndex > 0) {
@@ -289,12 +287,10 @@ const FormControls: React.FC<FormControlsProps> = ({
         ref={containerRef}
         className="relative flex items-center p-4 rounded-xl"
       >
-        {/* Continuous dashed line background - starts after first element */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-full h-0 border-t-2 border-dashed border-gray-200 ml-24"></div>
         </div>
 
-        {/* Insert zone before first item */}
         <div
           className="group relative flex items-center justify-center w-8 h-8 cursor-pointer z-10"
           onClick={() => handleInsertPage()}
@@ -318,7 +314,7 @@ const FormControls: React.FC<FormControlsProps> = ({
 
         {pages.map((page, index) => {
           const isDragged = index === draggedIndex && isDragActive;
-          const isCurrentView = index === currentViewIndex; // Added current view indicator
+          const isCurrentView = index === currentViewIndex;
 
           return (
             <React.Fragment key={page}>
@@ -327,7 +323,7 @@ const FormControls: React.FC<FormControlsProps> = ({
                   itemRefs.current[index] = el;
                 }}
                 onMouseDown={(e) => handleMouseDown(index, e)}
-                onClick={() => handleButtonClick(index)} // Added click handler
+                onClick={() => handleButtonClick(index)}
                 onFocus={() => setFocusedIndex(index)}
                 onBlur={() => setFocusedIndex(null)}
                 onContextMenu={(e) => handleContextMenu(e, index)}
@@ -338,8 +334,8 @@ const FormControls: React.FC<FormControlsProps> = ({
                 className={classNames(
                   "rounded-lg text-sm px-4 py-2.5 font-medium relative flex items-center justify-between gap-2",
                   isCurrentView
-                    ? "text-[#556178] bg-[#DDDFE5]" // Active state styling
-                    : "text-[#677289] bg-[#F1F1F3]", // Normal state styling
+                    ? "text-[#556178] bg-[#DDDFE5]"
+                    : "text-[#677289] bg-[#F1F1F3]",
                   "hover:bg-[#DDDFE5] hover:text-[#556178]",
                   "focus:outline-none select-none",
                   "transition-colors duration-100",
@@ -350,8 +346,12 @@ const FormControls: React.FC<FormControlsProps> = ({
               >
                 <FileIcon strokeColor={isCurrentView ? "#F59D0E" : undefined} />
                 {page}
-                {isCurrentView ? <span onClick={(e) => handleDotsClick(e, index)}><VerticleDots /></span> : null}
-                {/* Three dots overlay when focused */}
+                {isCurrentView ? (
+                  <span onClick={(e) => handleDotsClick(e, index)}>
+                    <VerticleDots />
+                  </span>
+                ) : null}
+
                 {focusedIndex === index && !isDragged && (
                   <div
                     className="absolute top-1 right-1 bg-gray-600 hover:bg-gray-700 rounded p-1 cursor-pointer"
@@ -365,7 +365,6 @@ const FormControls: React.FC<FormControlsProps> = ({
                   </div>
                 )}
               </button>
-
 
               {index < pages.length - 1 && (
                 <div
@@ -393,7 +392,6 @@ const FormControls: React.FC<FormControlsProps> = ({
           );
         })}
 
-        {/* Insert zone after last item */}
         <div
           className="group relative flex items-center justify-center w-8 h-8 cursor-pointer z-10"
           onClick={() => handleInsertPage()}
@@ -415,7 +413,6 @@ const FormControls: React.FC<FormControlsProps> = ({
           </div>
         </div>
 
-        {/* Add Page button at the end */}
         <button
           onClick={handleAddPage}
           className="ml-4 rounded-lg text-sm px-4 py-2.5 font-medium border-2 border-dashed border-gray-300 text-gray-500 hover:border-gray-400 hover:text-gray-600 hover:bg-gray-50 focus:outline-none transition-colors duration-200 relative z-20"
@@ -423,7 +420,6 @@ const FormControls: React.FC<FormControlsProps> = ({
           + Add Page
         </button>
 
-        {/* Context Menu */}
         {contextMenu.visible && (
           <div
             className="fixed bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-48 z-50"

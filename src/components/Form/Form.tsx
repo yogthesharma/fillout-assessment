@@ -34,9 +34,7 @@ const Form = (props: FormPropTypes) => {
     }
   };
 
-  // Sample options for select questions (you can make this dynamic)
   const getSelectOptions = (questionLabel: string) => {
-    // This is a simple example - you might want to make this more dynamic
     if (questionLabel.toLowerCase().includes('skill')) {
       return ['JavaScript', 'TypeScript', 'React', 'Node.js', 'Python'];
     }

@@ -41,7 +41,6 @@ export default function Home() {
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
 
   const handleViewChange = (newViews: string[]) => {
-    // Update formViews when FormControls changes the page order
     const updatedViews = newViews.map(viewLabel => {
       const existingView = formViews.find(view => view.label === viewLabel);
       return existingView || { label: viewLabel, questions: [] };
